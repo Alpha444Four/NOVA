@@ -33,17 +33,19 @@ const supabaseEnabled = Boolean(
   process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY
 );
 
-app.get("/api/health", (_req, res) => {
+app.get("/api/health", async (_req, res) => {
+  await db.ready();
   res.json({
     ok: true,
     service: "nova-store",
     supabase: supabaseEnabled,
-    database: db.usePg() ? "postgres" : "memory",
+    database: db.getMode(),
     timestamp: new Date().toISOString(),
   });
 });
 
-app.post("/api/auth/register", (req, res) => {
+async function handleRegister(req, res) {
+  await db.ready();
   const { name, email, password } = req.body || {};
   if (!name?.trim() || !email?.trim() || !password) {
     return res.status(400).json({ error: "Name, email, and password are required" });
@@ -51,20 +53,23 @@ app.post("/api/auth/register", (req, res) => {
   if (password.length < 8) {
     return res.status(400).json({ error: "Password must be at least 8 characters" });
   }
-  if (db.findUserByEmail(email)) {
+  if (await db.findUserByEmail(email.trim())) {
     return res.status(409).json({ error: "An account with this email already exists" });
   }
-  const user = db.createUser({ name: name.trim(), email: email.trim(), password });
+  const user = await db.createUser({ name: name.trim(), email: email.trim(), password });
   const token = auth.signToken(user);
   auth.setAuthCookie(res, token);
   res.status(201).json({ user: db.publicUser(user) });
-});
+}
 
-app.post("/api/auth/login", (req, res) => {
+app.post("/api/auth/register", handleRegister);
+app.post("/api/auth/signup", handleRegister);
+
+app.post("/api/auth/login", async (req, res) => {
+  await db.ready();
   const { email, password } = req.body || {};
-  const bcrypt = require("bcryptjs");
-  const user = db.findUserByEmail(email || "");
-  if (!user || !bcrypt.compareSync(password || "", user.password_hash)) {
+  const user = await db.findUserByEmail(email || "");
+  if (!user || !(await db.verifyPassword(user, password || ""))) {
     return res.status(401).json({ error: "Invalid email or password" });
   }
   const token = auth.signToken(user);
@@ -77,14 +82,13 @@ app.post("/api/auth/logout", (_req, res) => {
   res.json({ ok: true });
 });
 
-app.get("/api/auth/me", (req, res) => {
-  const user = auth.readUser(req);
-  if (!user) return res.status(401).json({ error: "Not authenticated" });
-  res.json({ user });
+app.get("/api/auth/me", auth.requireAuth, (req, res) => {
+  res.json({ user: req.user });
 });
 
-app.get("/api/products", (req, res) => {
-  const products = db.getProducts({
+app.get("/api/products", async (req, res) => {
+  await db.ready();
+  const products = await db.getProducts({
     category: req.query.category,
     q: req.query.q,
     sort: req.query.sort,
@@ -92,26 +96,30 @@ app.get("/api/products", (req, res) => {
   res.json({ products });
 });
 
-app.get("/api/products/search", (req, res) => {
+app.get("/api/products/search", async (req, res) => {
+  await db.ready();
   const q = (req.query.q || "").trim();
-  const products = q ? db.getProducts({ q }).slice(0, 8) : [];
+  const products = q ? (await db.getProducts({ q })).slice(0, 8) : [];
   res.json({ products });
 });
 
-app.post("/api/newsletter/subscribe", (req, res) => {
+app.post("/api/newsletter/subscribe", async (req, res) => {
+  await db.ready();
   const email = (req.body?.email || "").trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: "Valid email required" });
   }
-  db.subscribeNewsletter(email);
+  await db.subscribeNewsletter(email);
   res.json({ ok: true, code: "NOVA15" });
 });
 
-app.get("/api/newsletter/check", auth.requireAuth, (req, res) => {
-  res.json({ subscribed: db.isNewsletterSubscriber(req.user.email) });
+app.get("/api/newsletter/check", auth.requireAuth, async (req, res) => {
+  await db.ready();
+  res.json({ subscribed: await db.isNewsletterSubscriber(req.user.email) });
 });
 
-app.post("/api/orders", auth.requireAuth, (req, res) => {
+app.post("/api/orders", auth.requireAuth, async (req, res) => {
+  await db.ready();
   const { items, shipping, paymentMethod, applyDiscount } = req.body || {};
   if (!Array.isArray(items) || !items.length) {
     return res.status(400).json({ error: "Cart is empty" });
@@ -120,78 +128,60 @@ app.post("/api/orders", auth.requireAuth, (req, res) => {
     return res.status(400).json({ error: "Complete shipping address required" });
   }
 
-  let subtotal = 0;
-  const lineItems = items.map((item) => {
-    const product = db.store.products.find((p) => p.id === item.productId);
-    const price = product?.price ?? item.price ?? 0;
-    const qty = Math.max(1, Number(item.qty) || 1);
-    subtotal += price * qty;
-    return {
-      productId: item.productId,
-      name: product?.name || item.name || "Product",
-      price,
-      qty,
-    };
-  });
-
-  let discount = 0;
-  if (applyDiscount && db.isNewsletterSubscriber(req.user.email)) {
-    discount = Math.round(subtotal * 0.15 * 100) / 100;
+  let discountEligible = false;
+  if (applyDiscount) {
+    discountEligible = await db.isNewsletterSubscriber(req.user.email);
   }
-  const total = Math.round((subtotal - discount) * 100) / 100;
 
-  const order = db.createOrder({
-    userId: req.user.id,
-    items: lineItems,
-    shipping: { ...shipping, email: shipping.email || req.user.email },
-    paymentMethod: paymentMethod === "card" ? "card" : "cod",
-    total,
-    discount,
-  });
+  try {
+    const order = await db.createOrder(req.user.id, items, {
+      ...shipping,
+      email: shipping.email || req.user.email,
+    }, {
+      paymentMethod: paymentMethod === "card" ? "card" : "cod",
+      applyDiscount: discountEligible,
+    });
 
-  res.status(201).json({
-    order: {
-      id: order.id,
-      total: order.total,
-      orderStatus: order.order_status,
-    },
-  });
+    res.status(201).json({
+      order: {
+        id: order.id,
+        total: order.total,
+        orderStatus: order.orderStatus,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message || "Could not create order" });
+  }
 });
 
-app.get("/api/orders", auth.requireAuth, (req, res) => {
-  res.json({ orders: db.getOrdersForUser(req.user.id) });
+app.get("/api/orders", auth.requireAuth, async (req, res) => {
+  await db.ready();
+  res.json({ orders: await db.getOrdersForUser(req.user.id) });
 });
 
-app.get("/api/admin/stats", auth.requireAdmin, (_req, res) => {
-  res.json(db.adminStats());
+app.get("/api/admin/stats", auth.requireAdmin, async (_req, res) => {
+  await db.ready();
+  res.json(await db.adminStats());
 });
 
-app.get("/api/admin/products", auth.requireAdmin, (_req, res) => {
-  res.json({ products: db.store.products });
+app.get("/api/admin/products", auth.requireAdmin, async (_req, res) => {
+  await db.ready();
+  res.json({ products: await db.getAdminProducts() });
 });
 
-app.get("/api/admin/orders", auth.requireAdmin, (_req, res) => {
-  res.json({
-    orders: db.store.orders.map((o) => ({
-      id: o.id,
-      userId: o.user_id,
-      total: o.total,
-      orderStatus: o.order_status,
-      paymentStatus: o.payment_status,
-      paymentMethod: o.payment_method,
-      shippingName: o.shipping_name,
-      createdAt: o.created_at,
-      items: o.items,
-    })),
-  });
+app.get("/api/admin/orders", auth.requireAdmin, async (_req, res) => {
+  await db.ready();
+  res.json({ orders: await db.getAdminOrders() });
 });
 
-app.get("/api/admin/users", auth.requireAdmin, (_req, res) => {
-  res.json({ users: db.store.users.map(db.publicUser) });
+app.get("/api/admin/users", auth.requireAdmin, async (_req, res) => {
+  await db.ready();
+  res.json({ users: await db.getAdminUsers() });
 });
 
-app.get("/api/admin/newsletter", auth.requireAdmin, (_req, res) => {
-  res.json({ subscribers: db.store.newsletter });
+app.get("/api/admin/newsletter", auth.requireAdmin, async (_req, res) => {
+  await db.ready();
+  res.json({ subscribers: await db.getNewsletterSubscribers() });
 });
 
 app.post("/api/auth/oauth-exchange", (_req, res) => {
@@ -201,7 +191,6 @@ app.post("/api/auth/oauth-exchange", (_req, res) => {
   res.status(501).json({ error: "OAuth exchange is not implemented in this build" });
 });
 
-// Local dev only — Vercel serves `public/` via CDN (express.static is ignored there).
 if (!process.env.VERCEL) {
   app.use(express.static(path.join(__dirname, "..", "public")));
 }
@@ -217,13 +206,19 @@ app.use((err, _req, res, _next) => {
   res.status(status).json({ error: err.message || "Internal server error" });
 });
 
-db.initDb().catch((err) => console.error("DB init error:", err));
-
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`NOVA Store → http://localhost:${PORT}`);
-    console.log(`Supabase: ${supabaseEnabled ? "ENABLED ✓" : "disabled"}`);
-  });
+  db.ready()
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`NOVA Store → http://localhost:${PORT}`);
+        console.log(`Database: ${db.getMode()}`);
+        console.log(`Supabase OAuth: ${supabaseEnabled ? "ENABLED ✓" : "disabled"}`);
+      });
+    })
+    .catch((err) => {
+      console.error("Database init failed:", err);
+      process.exit(1);
+    });
 }
 
 module.exports = app;

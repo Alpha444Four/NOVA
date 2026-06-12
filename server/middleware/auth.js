@@ -42,12 +42,13 @@ function clearAuthCookie(res) {
   res.clearCookie(COOKIE_NAME, { path: "/" });
 }
 
-function readUser(req) {
+async function readUser(req) {
   const token = req.cookies[COOKIE_NAME];
   if (!token) return null;
   try {
+    await db.ready();
     const payload = jwt.verify(token, getJwtSecret());
-    const user = db.findUserById(payload.sub);
+    const user = await db.findUserById(payload.sub);
     return user ? db.publicUser(user) : null;
   } catch {
     return null;
@@ -55,19 +56,25 @@ function readUser(req) {
 }
 
 function requireAuth(req, res, next) {
-  const user = readUser(req);
-  if (!user) return res.status(401).json({ error: "Authentication required" });
-  req.user = user;
-  next();
+  readUser(req)
+    .then((user) => {
+      if (!user) return res.status(401).json({ error: "Authentication required" });
+      req.user = user;
+      next();
+    })
+    .catch(next);
 }
 
 function requireAdmin(req, res, next) {
-  const user = readUser(req);
-  if (!user || user.role !== "admin") {
-    return res.status(403).json({ error: "Admin access required" });
-  }
-  req.user = user;
-  next();
+  readUser(req)
+    .then((user) => {
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+      req.user = user;
+      next();
+    })
+    .catch(next);
 }
 
 module.exports = {
