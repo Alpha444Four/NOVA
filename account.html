@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fafaf9">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>My Account — NOVA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#account-main">Skip to account</a>
+
+  <div class="header-shell scrolled">
+    <header class="header" id="header">
+      <div class="header__inner">
+        <a href="index.html" class="logo" aria-label="NOVA Home">
+          <span class="logo__mark">N</span>
+          <span class="logo__text">NOVA</span>
+        </a>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html#shop" class="nav__link">Shop</a>
+          <a href="account.html" class="nav__link">Account</a>
+        </nav>
+        <div class="header__actions">
+          <div data-theme-toggle></div>
+          <div id="auth-slot"></div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <main class="account-page" id="account-main">
+    <div class="account-page__inner">
+      <h1>My account</h1>
+
+      <section class="account-card" id="profile-section">
+        <h2>Profile</h2>
+        <dl class="profile-dl" id="profile-info">
+          <dt>Name</dt><dd id="profile-name">—</dd>
+          <dt>Email</dt><dd id="profile-email">—</dd>
+          <dt>Member since</dt><dd id="profile-since">—</dd>
+        </dl>
+      </section>
+
+      <section class="account-card" id="orders">
+        <h2>Order history</h2>
+        <div id="orders-list">
+          <p class="account-loading">Loading orders…</p>
+        </div>
+      </section>
+
+      <a href="index.html#shop" class="btn btn--outline">Continue shopping</a>
+    </div>
+  </main>
+
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    function formatPrice(n) {
+      return `$${Number(n).toFixed(2)}`;
+    }
+
+    function formatDate(iso) {
+      return new Date(iso).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    }
+
+    const TRACK_STEPS = [
+      { key: "pending", label: "Order placed" },
+      { key: "confirmed", label: "Confirmed" },
+      { key: "shipped", label: "Shipped" },
+      { key: "delivered", label: "Delivered" },
+    ];
+
+    function renderTracking(status) {
+      if (status === "cancelled") {
+        return `<div class="order-track"><p class="order-card__status"><span class="badge badge--cancelled">Cancelled</span></p></div>`;
+      }
+      const idx = TRACK_STEPS.findIndex((s) => s.key === status);
+      const current = idx >= 0 ? idx : 0;
+      const steps = TRACK_STEPS.map((step, i) => {
+        const done = i <= current;
+        const isCurrent = i === current;
+        return `<li class="order-track__step${done ? " is-done" : ""}${isCurrent ? " is-current" : ""}">
+          <span class="order-track__dot" aria-hidden="true"></span>${step.label}
+        </li>`;
+      }).join("");
+      return `<div class="order-track" aria-label="Order tracking"><ol class="order-track__steps">${steps}</ol></div>`;
+    }
+
+    async function loadAccount() {
+      if (!(await NovaAuth.ensureServer())) return;
+      const user = await NovaAuth.getCurrentUser();
+      if (!user) {
+        window.location.href = "login.html?redirect=account.html";
+        return;
+      }
+
+      NovaAuth.renderUserMenu(user, document.getElementById("auth-slot"));
+
+      document.getElementById("profile-name").textContent = user.name;
+      document.getElementById("profile-email").textContent = user.email;
+      document.getElementById("profile-since").textContent = user.createdAt
+        ? formatDate(user.createdAt)
+        : "—";
+
+      const ordersEl = document.getElementById("orders-list");
+      try {
+        const data = await NovaAuth.api("/api/orders");
+        if (!data.orders.length) {
+          ordersEl.innerHTML = `<p class="account-empty">No orders yet. <a href="index.html#shop">Start shopping</a></p>`;
+          return;
+        }
+
+        ordersEl.innerHTML = data.orders
+          .map(
+            (o) => `
+          <article class="order-card">
+            <header class="order-card__header">
+              <div>
+                <strong>Order #${o.id}</strong>
+                <span class="order-card__date">${formatDate(o.createdAt)}</span>
+              </div>
+              <span class="order-card__total">${formatPrice(o.total)}</span>
+            </header>
+            <p class="order-card__status">
+              <span class="badge badge--${o.orderStatus}">${o.orderStatus}</span>
+              · ${o.paymentMethod === "cod" ? "Cash on delivery" : "Card"}
+              · ${o.paymentStatus}
+            </p>
+            ${renderTracking(o.orderStatus)}
+            <ul class="order-card__items">
+              ${o.items.map((i) => `<li>${i.qty}× ${i.name} — ${formatPrice(i.price * i.qty)}</li>`).join("")}
+            </ul>
+            <p class="order-card__ship">Ship to ${o.shippingName}, ${o.shippingCity}</p>
+            <p class="order-card__ship"><a href="help.html#returns">Return policy</a> · <a href="help.html#contact">Need help?</a></p>
+          </article>`
+          )
+          .join("");
+      } catch {
+        ordersEl.innerHTML = `<p class="account-empty">Could not load orders. Please refresh.</p>`;
+      }
+    }
+
+    loadAccount();
+  </script>
+</body>
+</html>

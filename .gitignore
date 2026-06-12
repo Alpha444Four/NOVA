@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+node_modules/
+client/node_modules/
+client/dist/
+data/
+.env
+client/.env
+*.db
+*.db-shm
+*.db-wal
+cookies.txt
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*

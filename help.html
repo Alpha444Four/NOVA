@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NOVA help center — shipping, returns, FAQ, contact, and policies.">
+  <meta name="theme-color" content="#fafaf9">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Help &amp; Support — NOVA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#help-main">Skip to content</a>
+
+  <div class="header-shell scrolled">
+    <header class="header">
+      <div class="header__inner">
+        <a href="index.html" class="logo" aria-label="NOVA Home">
+          <span class="logo__mark">N</span>
+          <span class="logo__text">NOVA</span>
+        </a>
+        <nav class="nav" aria-label="Main navigation">
+          <a href="index.html#shop" class="nav__link">Shop</a>
+          <a href="account.html" class="nav__link">Account</a>
+        </nav>
+        <div class="header__actions">
+          <div data-theme-toggle></div>
+          <div id="auth-slot"></div>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <main class="help-page" id="help-main">
+    <div class="help-page__inner">
+      <h1>Help &amp; support</h1>
+      <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Everything you need to shop with confidence at NOVA.</p>
+
+      <nav class="help-nav" aria-label="Help topics">
+        <a href="#contact">Contact</a>
+        <a href="#shipping">Shipping</a>
+        <a href="#returns">Returns</a>
+        <a href="#faq">FAQ</a>
+        <a href="#careers">Careers</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#terms">Terms</a>
+      </nav>
+
+      <section class="help-section account-card" id="contact">
+        <h2>Contact us</h2>
+        <p>Email <a href="mailto:support@nova.store">support@nova.store</a> — we reply within one business day.</p>
+        <p>Phone: +1 (555) 014-2026 · Mon–Fri 9am–6pm EST</p>
+        <p>HQ: 120 Mercer Street, New York, NY 10012</p>
+      </section>
+
+      <section class="help-section account-card" id="shipping">
+        <h2>Shipping</h2>
+        <ul>
+          <li>Standard delivery: 2–4 business days (US)</li>
+          <li><strong>Free shipping</strong> on orders over $75</li>
+          <li>Express 1–2 day shipping available at checkout (where offered)</li>
+          <li>Tracking link sent by email when your order ships</li>
+        </ul>
+      </section>
+
+      <section class="help-section account-card" id="returns">
+        <h2>Returns &amp; refunds</h2>
+        <ul>
+          <li>30-day returns on unused items in original packaging</li>
+          <li>Free return shipping on defective or wrong items</li>
+          <li>Refunds processed within 5–7 business days after we receive your return</li>
+          <li>Start a return from <a href="account.html#orders">your order history</a> or email support</li>
+        </ul>
+      </section>
+
+      <section class="help-section account-card" id="faq">
+        <h2>FAQ</h2>
+        <p><strong>How do I apply my 15% discount?</strong> Subscribe on the homepage, then use code <strong>NOVA15</strong> at checkout (checkbox appears when eligible).</p>
+        <p><strong>Can I pay with card?</strong> Card payments are authorized at checkout; cash on delivery is also available.</p>
+        <p><strong>Where is my order?</strong> Open <a href="account.html#orders">My account → Orders</a> for live status and tracking steps.</p>
+        <p><strong>Do you ship internationally?</strong> US shipping only at this time.</p>
+      </section>
+
+      <section class="help-section account-card" id="careers">
+        <h2>Careers</h2>
+        <p>We're growing our team in design, engineering, and operations. Send your portfolio to <a href="mailto:careers@nova.store">careers@nova.store</a>.</p>
+      </section>
+
+      <section class="help-section account-card" id="privacy">
+        <h2>Privacy policy</h2>
+        <p>We collect account and order data to fulfill purchases. Payment card data is never stored on our servers. We do not sell personal information to third parties.</p>
+      </section>
+
+      <section class="help-section account-card" id="terms">
+        <h2>Terms of service</h2>
+        <p>By using NOVA you agree to our pricing, shipping, and return policies. Products are subject to availability. We reserve the right to cancel fraudulent orders.</p>
+      </section>
+
+      <a href="index.html" class="btn btn--outline">← Back to shop</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__bottom" style="border: none; padding-top: 0;">
+      <p>&copy; 2026 NOVA. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    (async () => {
+      if (!(await NovaAuth.ensureServer())) return;
+      const user = await NovaAuth.getCurrentUser();
+      NovaAuth.renderUserMenu(user, document.getElementById("auth-slot"));
+    })();
+  </script>
+</body>
+</html>

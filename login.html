@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to your NOVA account to checkout faster and track orders.">
+  <meta name="theme-color" content="#fafaf9">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>Log in — NOVA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme-init.js"></script>
+  <script>location.replace("/login" + (location.search || ""));</script>
+</head>
+<body class="auth-page">
+  <a class="skip-link" href="#auth-main">Skip to login form</a>
+
+  <header class="auth-mobile-bar" aria-label="NOVA">
+    <a href="index.html" class="logo" aria-label="NOVA Home">
+      <span class="logo__mark">N</span>
+      <span class="logo__text">NOVA</span>
+    </a>
+  </header>
+
+  <div class="auth-theme-toggle" data-theme-toggle></div>
+
+  <div class="auth-layout">
+    <aside class="auth-aside" aria-hidden="true">
+      <a href="index.html" class="logo" tabindex="-1">
+        <span class="logo__mark">N</span>
+        <span class="logo__text">NOVA</span>
+      </a>
+      <blockquote>
+        <p>Quality essentials, delivered with care.</p>
+        <footer>— The NOVA team</footer>
+      </blockquote>
+    </aside>
+
+    <main class="auth-main" id="auth-main">
+      <a href="index.html" class="auth-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Back to store
+      </a>
+
+      <div class="auth-card">
+        <h1 id="login-heading">Welcome back</h1>
+        <p class="auth-subtitle" id="login-desc">Log in to your account to checkout and track orders.</p>
+
+        <div class="auth-error" id="auth-error" role="alert" aria-live="assertive" hidden></div>
+
+        <form id="login-form" class="auth-form" aria-labelledby="login-heading" aria-describedby="login-desc" novalidate>
+          <div class="form-field">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" name="email" placeholder="you@email.com" required autocomplete="email" inputmode="email" spellcheck="false" aria-required="true">
+          </div>
+
+          <div class="form-field">
+            <label for="login-password">Password</label>
+            <div class="input-password">
+              <input type="password" id="login-password" name="password" placeholder="Your password" required autocomplete="current-password" minlength="8" aria-required="true">
+              <button type="button" class="input-password__toggle" data-password-toggle aria-controls="login-password" aria-pressed="false" aria-label="Show password">
+                <svg class="icon-show" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="icon-hide" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="submit-btn">Log in</button>
+        </form>
+
+        <p class="auth-footer">
+          Don't have an account? <a href="signup.html">Sign up</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/auth-page.js"></script>
+  <script>
+    const { form, errorEl } = initAuthPage("login-form", "auth-error");
+    const submitBtn = document.getElementById("submit-btn");
+
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("reason") === "admin") {
+        NovaAuth.showAuthError(errorEl, "Administrator sign-in required to open the control panel.");
+      } else if (params.get("reason") === "session") {
+        NovaAuth.showAuthError(errorEl, "Your session expired. Please sign in again.");
+      }
+
+      if (!(await NovaAuth.ensureServer())) return;
+      const user = await NovaAuth.getCurrentUser();
+      if (user) window.location.href = NovaAuth.getRedirectUrl();
+    })();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      NovaAuth.hideAuthError(errorEl);
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      setAuthLoading(submitBtn, true, "Log in");
+
+      try {
+        await NovaAuth.login(form.email.value, form.password.value);
+        await NovaAuth.finishAuthAndRedirect();
+      } catch (err) {
+        NovaAuth.showAuthError(errorEl, err.message);
+        document.getElementById("login-email").focus();
+        setAuthLoading(submitBtn, false, "Log in");
+      }
+    });
+  </script>
+</body>
+</html>

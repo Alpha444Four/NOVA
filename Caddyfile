@@ -1,0 +1,32 @@
+# HTTP listener for novadeluxe.dpdns.org.
+#
+# - /api/health is served directly so local smoke tests and load-balancer
+#   health probes can hit it without TLS.
+# - Everything else is redirected to HTTPS so real users / cookies / auth are
+#   always on TLS.
+http://novadeluxe.dpdns.org {
+	@health path /api/health
+	handle @health {
+		reverse_proxy 127.0.0.1:3000
+	}
+	handle {
+		redir https://{host}{uri} permanent
+	}
+}
+
+# HTTPS listener (auto-TLS via Let's Encrypt).
+novadeluxe.dpdns.org {
+	encode zstd gzip
+
+	header {
+		# 1y HSTS — only safe once you're certain everything is on HTTPS
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Hide upstream server header
+		-Server
+	}
+
+	# Caddy automatically forwards X-Forwarded-For and X-Forwarded-Proto.
+	reverse_proxy 127.0.0.1:3000
+}

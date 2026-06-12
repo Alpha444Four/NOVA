@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0f1117">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>NOVA Control Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="adm adm--loading" id="adm-body">
+  <div class="adm-loader" id="adm-loader">
+    <div class="adm-loader__spin"></div>
+    <p>Loading control panel…</p>
+  </div>
+
+  <div class="adm-layout" id="adm-app" hidden>
+    <aside class="adm-sidebar">
+      <a href="index.html" class="adm-brand">
+        <span class="adm-brand__mark">N</span>
+        <span class="adm-brand__text">NOVA</span>
+      </a>
+      <p class="adm-brand__sub">Control Panel</p>
+
+      <nav class="adm-nav" aria-label="Admin navigation">
+        <button type="button" class="adm-nav__btn active" data-panel="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </button>
+        <button type="button" class="adm-nav__btn" data-panel="products">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/></svg>
+          Products
+        </button>
+        <button type="button" class="adm-nav__btn" data-panel="orders">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          Orders
+        </button>
+        <button type="button" class="adm-nav__btn" data-panel="customers">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Customers
+        </button>
+        <button type="button" class="adm-nav__btn" data-panel="newsletter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+          Newsletter
+        </button>
+      </nav>
+
+      <div class="adm-sidebar__foot">
+        <a href="index.html" class="adm-link">← Back to store</a>
+        <button type="button" class="adm-btn-logout" id="adm-logout">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="adm-main">
+      <header class="adm-topbar">
+        <div>
+          <h1 id="adm-title">Dashboard</h1>
+          <p class="adm-topbar__sub" id="adm-subtitle">Store overview</p>
+        </div>
+        <div class="adm-topbar__right">
+          <span id="adm-admin-name" style="font-size:0.9rem;color:var(--adm-muted)"></span>
+          <span class="adm-avatar" id="adm-avatar" aria-hidden="true">A</span>
+        </div>
+      </header>
+
+      <!-- Dashboard -->
+      <section class="adm-panel active" id="panel-dashboard">
+        <div class="adm-stats" id="adm-stats"></div>
+        <div class="adm-grid-2">
+          <div class="adm-card">
+            <div class="adm-card__head">Recent orders</div>
+            <div class="adm-card__body" id="dash-recent-orders"></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card__head">New customers</div>
+            <div class="adm-card__body" id="dash-recent-users"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section class="adm-panel" id="panel-products">
+        <div class="adm-toolbar">
+          <input type="search" class="adm-search" id="product-search" placeholder="Search products…">
+          <button type="button" class="adm-btn adm-btn--primary" id="add-product-btn">+ Add product</button>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Was</th>
+                <th>Stock</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Orders -->
+      <section class="adm-panel" id="panel-orders">
+        <div class="adm-toolbar">
+          <input type="search" class="adm-search" id="order-search" placeholder="Search by name or email…">
+          <select class="adm-select" id="order-filter">
+            <option value="">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="confirmed">Confirmed</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+        <div id="admin-orders-list"></div>
+      </section>
+
+      <!-- Customers -->
+      <section class="adm-panel" id="panel-customers">
+        <div class="adm-toolbar">
+          <input type="search" class="adm-search" id="user-search" placeholder="Search by name or email…">
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Orders</th>
+                <th>Spent</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Newsletter -->
+      <section class="adm-panel" id="panel-newsletter">
+        <div class="adm-toolbar">
+          <p style="color:var(--adm-muted);font-size:0.9rem">Manage newsletter signups from the storefront.</p>
+        </div>
+        <div class="adm-table-wrap">
+          <table class="adm-table">
+            <thead>
+              <tr><th>Email</th><th>Subscribed</th><th></th></tr>
+            </thead>
+            <tbody id="newsletter-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Product modal -->
+  <div class="adm-overlay" id="product-overlay" hidden>
+    <div class="adm-modal adm-modal--wide" role="dialog" aria-labelledby="product-form-title">
+      <div class="adm-modal__head">
+        <h2 id="product-form-title">Add product</h2>
+        <button type="button" class="adm-modal__close" data-close="product">&times;</button>
+      </div>
+      <div class="adm-modal__body">
+        <form id="product-form" class="adm-form">
+          <input type="hidden" name="id" id="product-id">
+          <label>Name <input type="text" name="name" required></label>
+          <div class="adm-form__row">
+            <label>Category <input type="text" name="category" required></label>
+            <label>Badge <input type="text" name="badge" placeholder="sale, new…"></label>
+          </div>
+          <div class="adm-form__row">
+            <label>Price ($) <input type="number" name="price" step="0.01" min="0" required></label>
+            <label>Original price <input type="number" name="originalPrice" step="0.01" min="0"></label>
+          </div>
+          <div class="adm-form__row">
+            <label>Stock <input type="number" name="stock" min="0" value="100" required></label>
+            <label>Rating <input type="number" name="rating" min="0" max="5" step="0.1" value="4.5"></label>
+          </div>
+          <label>Image URL <input type="url" name="image" required></label>
+          <label>Description <textarea name="description" rows="3" required></textarea></label>
+          <div class="adm-form__actions">
+            <button type="button" class="adm-btn adm-btn--ghost" data-close="product">Cancel</button>
+            <button type="submit" class="adm-btn adm-btn--primary">Save product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- User modal -->
+  <div class="adm-overlay" id="user-overlay" hidden>
+    <div class="adm-modal adm-modal--wide" role="dialog" aria-labelledby="user-modal-title">
+      <div class="adm-modal__head">
+        <h2 id="user-modal-title">Customer</h2>
+        <button type="button" class="adm-modal__close" data-close="user">&times;</button>
+      </div>
+      <div class="adm-modal__body">
+        <div id="user-detail-view"></div>
+        <form id="user-form" class="adm-form" hidden>
+          <input type="hidden" name="id" id="user-id">
+          <label>Full name <input type="text" name="name" required></label>
+          <label>Email <input type="email" name="email" required></label>
+          <label>Role
+            <select name="role">
+              <option value="user">Customer</option>
+              <option value="admin">Admin</option>
+            </select>
+          </label>
+          <div class="adm-form__actions">
+            <button type="button" class="adm-btn adm-btn--ghost" id="user-form-cancel">Cancel</button>
+            <button type="submit" class="adm-btn adm-btn--primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="adm-toast" id="adm-toast" role="status"></div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

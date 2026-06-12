@@ -1,0 +1,46 @@
+{
+  "name": "nova-store",
+  "version": "1.0.0",
+  "description": "NOVA — Full-stack e-commerce with auth, admin panel, live search, and animated dark mode",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "client:install": "npm install --prefix client",
+    "client:dev": "npm run dev --prefix client",
+    "client:build": "npm run build --prefix client",
+    "build": "npm run client:build",
+    "db:migrate": "node scripts/apply-supabase-sql.js",
+    "build:all": "npm run client:build",
+    "dev:app": "npm run client:build && npm start",
+    "dev:full": "npm run client:build && npm start",
+    "skills:install": "powershell -ExecutionPolicy Bypass -File scripts/install-ai-skills.ps1"
+  },
+  "keywords": [
+    "ecommerce",
+    "nodejs",
+    "express",
+    "sqlite",
+    "dark-mode",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.106.2",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.14.1",
+    "ws": "^8.21.0"
+  }
+}

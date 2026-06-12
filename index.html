@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NOVA — Premium lifestyle essentials. Shop fashion, tech, and home goods with free shipping over $75.">
+  <meta name="theme-color" content="#fafaf9">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <title>NOVA — Premium Lifestyle Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <div class="header-shell" id="header-shell">
+  <header class="header" id="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo" aria-label="NOVA Home">
+        <span class="logo__mark">N</span>
+        <span class="logo__text">NOVA</span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Main navigation">
+        <a href="#shop" class="nav__link">Shop</a>
+        <a href="#categories" class="nav__link">Categories</a>
+        <a href="#featured" class="nav__link">Featured</a>
+        <a href="#about" class="nav__link">About</a>
+      </nav>
+
+      <div class="header__actions">
+        <div data-theme-toggle></div>
+        <div id="auth-slot" class="auth-slot"></div>
+        <button class="icon-btn" id="search-btn" aria-label="Search products">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button class="icon-btn cart-trigger" id="cart-btn" aria-label="Open cart">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span class="cart-badge" id="cart-badge" hidden>0</span>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="search-bar" id="search-bar" hidden>
+      <div class="search-bar__wrap">
+        <input type="search" id="search-input" placeholder="Search products…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="search-results" aria-autocomplete="list">
+        <ul class="search-results" id="search-results" role="listbox" hidden></ul>
+      </div>
+      <button class="search-bar__close" id="search-close" aria-label="Close search">&times;</button>
+    </div>
+  </header>
+  </div>
+
+  <main id="main-content">
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero__gradient" id="hero-gradient"></div>
+      <div class="hero__inner hero__inner--above">
+        <div class="hero__content">
+          <p class="hero__eyebrow">
+            <span class="hero__badge">New</span>
+            Spring Collection 2026
+          </p>
+          <h1 class="hero__title" id="hero-heading">Curated essentials for <em>modern living</em></h1>
+          <p class="hero__desc">Premium fashion, tech, and home goods — ethically sourced, designed to last, delivered in 2–4 days.</p>
+          <div class="hero__cta">
+            <a href="#shop" class="btn btn--primary btn--lg">Shop the collection</a>
+            <a href="#featured" class="btn btn--ghost btn--lg">View bestsellers</a>
+          </div>
+          <ul class="hero__stats" aria-label="Store highlights">
+            <li><strong>2.4k+</strong><span>Happy customers</span></li>
+            <li><strong>4.9</strong><span>Average rating</span></li>
+            <li><strong>$75+</strong><span>Free shipping</span></li>
+          </ul>
+        </div>
+        <div class="hero__visual">
+          <div class="hero__image-frame">
+            <img src="https://images.unsplash.com/photo-1441984904996-e0b6c6870b0a?w=800&q=80" alt="Curated lifestyle products in a modern boutique setting" width="800" height="1000" loading="eager" fetchpriority="high">
+          </div>
+          <div class="hero__card">
+            <span class="hero__card-label">Trending now</span>
+            <p>Minimalist Leather Tote</p>
+            <strong>$189</strong>
+            <a href="#featured" class="hero__card-link">Shop now</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="brand-strip" aria-label="Featured in">
+      <p class="brand-strip__label">Trusted by shoppers worldwide</p>
+      <ul class="brand-strip__list">
+        <li>Vogue</li>
+        <li>Wired</li>
+        <li>Architectural Digest</li>
+        <li>GQ</li>
+        <li>Monocle</li>
+      </ul>
+    </section>
+
+    <section class="trust-bar" aria-label="Store benefits">
+      <div class="trust-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span>Free shipping over $75</span>
+      </div>
+      <div class="trust-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>Secure checkout</span>
+      </div>
+      <div class="trust-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"/><path d="M3 9l2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/></svg>
+        <span>30-day returns</span>
+      </div>
+      <div class="trust-bar__item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>Quality guaranteed</span>
+      </div>
+    </section>
+
+    <section class="featured" id="featured" aria-labelledby="featured-heading">
+      <div class="section-header section-header--row">
+        <div>
+          <p class="section-eyebrow">Editor's picks</p>
+          <h2 id="featured-heading">Bestsellers this week</h2>
+          <p>Hand-picked favorites our customers love most</p>
+        </div>
+        <a href="#shop" class="btn btn--outline">View all products</a>
+      </div>
+      <div class="featured__track" id="featured-track" role="list" aria-label="Featured products"></div>
+    </section>
+
+    <section class="categories" id="categories">
+      <div class="section-header">
+        <p class="section-eyebrow">Browse</p>
+        <h2>Shop by category</h2>
+        <p>Find exactly what you're looking for</p>
+      </div>
+      <div class="categories__grid" id="category-cards"></div>
+    </section>
+
+    <section class="shop" id="shop">
+      <div class="section-header section-header--row">
+        <div>
+          <p class="section-eyebrow">Catalog</p>
+          <h2>All products</h2>
+          <p id="product-count">12 products</p>
+        </div>
+        <div class="shop__controls">
+          <div class="filter-pills" id="filter-pills" role="tablist" aria-label="Filter by category"></div>
+          <select class="sort-select" id="sort-select" aria-label="Sort products">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>
+      <div class="products-grid" id="products-grid" role="list"></div>
+      <p class="empty-state" id="empty-state" hidden>No products match your search.</p>
+    </section>
+
+    <section class="testimonials" aria-labelledby="testimonials-heading">
+      <div class="section-header">
+        <p class="section-eyebrow">Reviews</p>
+        <h2 id="testimonials-heading">Loved by thousands</h2>
+        <p>Real feedback from the NOVA community</p>
+      </div>
+      <div class="testimonials__grid">
+        <blockquote class="testimonial-card">
+          <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p>"The quality blew me away. Fast shipping, beautiful packaging, and pieces I reach for every day."</p>
+          <footer>
+            <cite>Sarah M.</cite>
+            <span>Verified buyer · Fashion</span>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card">
+          <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p>"Finally a store that balances design and durability. The tech accessories are top-tier."</p>
+          <footer>
+            <cite>James K.</cite>
+            <span>Verified buyer · Tech</span>
+          </footer>
+        </blockquote>
+        <blockquote class="testimonial-card">
+          <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p>"Easy returns, responsive support, and products that actually match the photos. Highly recommend."</p>
+          <footer>
+            <cite>Elena R.</cite>
+            <span>Verified buyer · Home</span>
+          </footer>
+        </blockquote>
+      </div>
+    </section>
+
+    <section class="promo" aria-labelledby="promo-heading">
+      <div class="promo__inner">
+        <div class="promo__text">
+          <span class="promo__tag">Limited offer</span>
+          <h2 id="promo-heading">Get 15% off your first order</h2>
+          <p>Subscribe to our newsletter and receive an exclusive discount code.</p>
+          <form class="newsletter-form" id="newsletter-form">
+            <label class="visually-hidden" for="newsletter-email">Email address</label>
+            <input type="email" id="newsletter-email" name="email" placeholder="you@email.com" required autocomplete="email">
+            <button type="submit" class="btn btn--primary">Subscribe</button>
+          </form>
+        </div>
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80" alt="Customer unboxing a NOVA order" width="600" height="400" loading="lazy">
+      </div>
+    </section>
+
+    <section class="about" id="about">
+      <div class="about__grid">
+        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80" alt="Our story" width="600" height="500" loading="lazy">
+        <div class="about__content">
+          <p class="section-eyebrow">Our story</p>
+          <h2>Built for people who value quality</h2>
+          <p>NOVA partners with independent designers and ethical manufacturers to bring you products that last — without the markup of traditional retail.</p>
+          <ul class="about__list">
+            <li>Sustainably sourced materials</li>
+            <li>Transparent pricing</li>
+            <li>Carbon-neutral shipping</li>
+          </ul>
+          <a href="#shop" class="btn btn--outline">Explore the shop</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="index.html" class="logo logo--footer"><span class="logo__mark">N</span><span class="logo__text">NOVA</span></a>
+        <p>Premium lifestyle essentials, delivered with care.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#shop">All Products</a></li>
+          <li><a href="#" data-filter="Fashion">Fashion</a></li>
+          <li><a href="#" data-filter="Tech">Tech</a></li>
+          <li><a href="#" data-filter="Home">Home</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="help.html#contact">Contact</a></li>
+          <li><a href="help.html#shipping">Shipping</a></li>
+          <li><a href="help.html#returns">Returns</a></li>
+          <li><a href="help.html#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="help.html#careers">Careers</a></li>
+          <li><a href="help.html#privacy">Privacy</a></li>
+          <li><a href="help.html#terms">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2026 NOVA. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="cart-drawer__overlay" id="cart-overlay"></div>
+    <div class="cart-drawer__panel">
+      <header class="cart-drawer__header">
+        <h2>Your cart <span id="cart-count-label">(0)</span></h2>
+        <button class="icon-btn" id="cart-close" aria-label="Close cart">&times;</button>
+      </header>
+      <div class="cart-drawer__items" id="cart-items"></div>
+      <footer class="cart-drawer__footer">
+        <div class="cart-summary">
+          <span>Subtotal</span>
+          <strong id="cart-subtotal">$0.00</strong>
+        </div>
+        <p class="cart-shipping-note" id="shipping-note">Add $75.00 more for free shipping</p>
+        <button class="btn btn--primary btn--full" id="checkout-btn" disabled>Checkout</button>
+        <button class="btn btn--ghost btn--full" id="continue-shopping">Continue shopping</button>
+      </footer>
+    </div>
+  </aside>
+
+  <!-- Product modal -->
+  <dialog class="product-modal" id="product-modal" aria-labelledby="modal-title">
+    <button class="product-modal__close" id="modal-close" aria-label="Close">&times;</button>
+    <div class="product-modal__content" id="modal-content"></div>
+  </dialog>
+
+  <!-- Checkout modal -->
+  <dialog class="checkout-modal" id="checkout-modal" aria-labelledby="checkout-title">
+    <button class="checkout-modal__close" id="checkout-close" aria-label="Close">&times;</button>
+    <div class="checkout-modal__inner">
+      <h2 id="checkout-title">Checkout</h2>
+      <form id="checkout-form" class="checkout-form">
+        <fieldset>
+          <legend>Contact</legend>
+          <input type="email" name="email" placeholder="Email" required>
+        </fieldset>
+        <fieldset>
+          <legend>Shipping address</legend>
+          <input type="text" name="name" placeholder="Full name" required>
+          <input type="text" name="address" placeholder="Address" required>
+          <div class="checkout-form__row">
+            <input type="text" name="city" placeholder="City" required>
+            <input type="text" name="zip" placeholder="ZIP code" required>
+          </div>
+        </fieldset>
+        <fieldset class="payment-fieldset">
+          <legend>Payment method</legend>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="cod" checked>
+            <span>
+              <strong>Cash on delivery</strong>
+              <small>Pay when your order arrives</small>
+            </span>
+          </label>
+          <label class="payment-option">
+            <input type="radio" name="paymentMethod" value="card">
+            <span>
+              <strong>Credit / debit card</strong>
+              <small>Processed securely — card details are never stored on our servers</small>
+            </span>
+          </label>
+          <p class="payment-note" id="card-note" hidden>
+            Card payments are authorized only. In production, Stripe or PayPal handles all card data (PCI compliant).
+          </p>
+        </fieldset>
+        <div class="checkout-discount" id="checkout-discount-row" hidden>
+          <label class="checkout-discount__label">
+            <input type="checkbox" id="apply-discount" name="applyDiscount">
+            Apply newsletter code <strong>NOVA15</strong> (15% off)
+          </label>
+        </div>
+        <div class="checkout-total">
+          <span>Total</span>
+          <strong id="checkout-total">$0.00</strong>
+        </div>
+        <button type="submit" class="btn btn--primary btn--full">Place order</button>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/animated-gradient.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
