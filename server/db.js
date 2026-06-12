@@ -43,8 +43,14 @@ function createStore() {
 let store = createStore();
 let pgPool = null;
 
+function hasValidDatabaseUrl() {
+  const url = process.env.DATABASE_URL || "";
+  if (!url || url.includes("[YOUR-PASSWORD]") || url.includes("://postgres:@")) return false;
+  return /^postgres(ql)?:\/\//i.test(url);
+}
+
 async function initDb() {
-  if (process.env.USE_SUPABASE_DB === "true" && process.env.DATABASE_URL) {
+  if (process.env.USE_SUPABASE_DB === "true" && hasValidDatabaseUrl()) {
     try {
       const { Pool } = require("pg");
       pgPool = new Pool({
@@ -125,7 +131,7 @@ function createOrder({ userId, items, shipping, paymentMethod, total, discount }
     discount: discount || 0,
     payment_method: paymentMethod,
     payment_status: paymentMethod === "cod" ? "pending" : "authorized",
-    order_status: "processing",
+    order_status: "pending",
     shipping_name: shipping.name,
     shipping_address: shipping.address,
     shipping_city: shipping.city,

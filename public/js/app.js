@@ -267,7 +267,6 @@
       saveCart(cart);
     }
     if (e.target.closest("#checkout-btn")) {
-      const user = null;
       NovaAuth.getCurrentUser().then((u) => {
         if (!u) {
           window.location.href = "login.html?redirect=index.html";

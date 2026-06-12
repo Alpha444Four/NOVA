@@ -9,8 +9,9 @@
     "client:install": "npm install --prefix client",
     "client:dev": "npm run dev --prefix client",
     "client:build": "npm run build --prefix client",
-    "build": "node -e \"console.log('NOVA: public/ static assets + Express API ready for Vercel')\"",
+    "build": "node scripts/verify.js",
     "vercel-build": "npm run build",
+    "verify": "node scripts/verify.js",
     "db:migrate": "node scripts/apply-supabase-sql.js",
     "build:all": "npm run client:build",
     "dev:app": "npm run client:build && npm start",
@@ -31,9 +32,7 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.106.2",
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^11.7.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
@@ -41,7 +40,6 @@
     "express-rate-limit": "^7.5.0",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.14.1",
-    "ws": "^8.21.0"
+    "pg": "^8.14.1"
   }
 }

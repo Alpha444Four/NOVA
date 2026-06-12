@@ -13,7 +13,7 @@ NOVA runs on Vercel as a **zero-config Express** app. Static files live in `publ
 1. Open [vercel.com/new](https://vercel.com/new)
 2. Import **Alpha444Four/NOVA**
 3. Framework preset: **Other** (Vercel auto-detects Express)
-4. Build command: `npm run build`
+4. Build command: `npm run build` (runs `scripts/verify.js` — fails the deploy if API/static checks break)
 5. Output directory: leave default (static files are in `public/`)
 
 ## 2. Environment variables

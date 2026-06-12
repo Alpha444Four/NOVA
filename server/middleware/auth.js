@@ -14,6 +14,7 @@ function getJwtSecret() {
 function cookieSecure() {
   if (process.env.COOKIE_SECURE === "false") return false;
   if (process.env.COOKIE_SECURE === "true") return true;
+  if (process.env.VERCEL) return true;
   const url = process.env.PUBLIC_URL || "";
   return process.env.NODE_ENV === "production" && url.startsWith("https");
 }

@@ -12,7 +12,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&family=Rubik:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/theme-init.js"></script>
-  <script>location.replace("/login" + (location.search || ""));</script>
+  <script>
+    if (/\.html$/i.test(location.pathname)) {
+      location.replace("/login" + location.search + location.hash);
+    }
+  </script>
 </head>
 <body class="auth-page">
   <a class="skip-link" href="#auth-main">Skip to login form</a>

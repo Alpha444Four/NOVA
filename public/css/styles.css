@@ -234,6 +234,20 @@ button, input, select, textarea { font: inherit; }
 .profile-dl { display: grid; grid-template-columns: 140px 1fr; gap: .5rem 1rem; }
 .order-card { border-top: 1px solid var(--border); padding: 1rem 0; }
 .badge { display: inline-block; padding: .2rem .55rem; border-radius: 999px; background: var(--border); font-size: .8rem; }
+.badge--pending, .badge--processing { background: #fef3c7; color: #92400e; }
+.badge--confirmed { background: #dbeafe; color: #1e40af; }
+.badge--shipped { background: #e0e7ff; color: #3730a3; }
+.badge--delivered { background: #dcfce7; color: #166534; }
+.badge--cancelled { background: #fee2e2; color: #991b1b; }
+.help-page__inner { width: min(900px, calc(100% - 2rem)); margin: 2rem auto 4rem; }
+.help-page__nav { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; }
+.help-page__nav a { color: var(--primary); font-weight: 600; }
+.help-section { margin-bottom: 2rem; }
+.help-section h2 { margin-bottom: .5rem; }
+.order-track__steps { display: flex; flex-wrap: wrap; gap: .5rem 1rem; list-style: none; padding: 0; }
+.order-track__step { color: var(--muted); font-size: .85rem; }
+.order-track__step.is-done { color: var(--text); font-weight: 600; }
+.order-track__step.is-current { color: var(--primary); }
 @media (max-width: 900px) {
   .nav { display: none; position: absolute; top: var(--header-h); left: 0; right: 0; flex-direction: column; background: var(--surface); padding: 1rem; border-bottom: 1px solid var(--border); }
   .nav.is-open { display: flex; }
