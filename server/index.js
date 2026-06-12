@@ -35,11 +35,14 @@ const supabaseEnabled = Boolean(
 
 app.get("/api/health", async (_req, res) => {
   await db.ready();
+  const dbInfo = db.getDiagnostics();
   res.json({
     ok: true,
     service: "nova-store",
     supabase: supabaseEnabled,
-    database: db.getMode(),
+    database: dbInfo.mode,
+    postgresConfigured: dbInfo.postgresConfigured,
+    hint: dbInfo.hint,
     timestamp: new Date().toISOString(),
   });
 });
