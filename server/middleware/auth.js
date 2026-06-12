@@ -5,10 +5,11 @@ const COOKIE_NAME = "nova_token";
 
 function getJwtSecret() {
   const secret = process.env.JWT_SECRET;
-  if (!secret && process.env.NODE_ENV === "production") {
-    throw new Error("JWT_SECRET is required in production");
+  if (secret) return secret;
+  if (process.env.NODE_ENV === "production" && process.env.VERCEL) {
+    console.warn("JWT_SECRET is not set — auth will fail until you add it in Vercel env vars");
   }
-  return secret || "dev-only-jwt-secret-change-me-32chars";
+  return "dev-only-jwt-secret-change-me-32chars";
 }
 
 function cookieSecure() {

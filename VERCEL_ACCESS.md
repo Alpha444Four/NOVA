@@ -23,7 +23,21 @@ The Cloud Agent and GitHub Actions need **one-time setup** before CLI/MCP deploy
 
 6. Click **Deploy**. Every push to `main` redeploys automatically.
 
-If a previous deploy failed, open **Deployments → Redeploy** on the latest `main` commit.
+If you see **`404 DEPLOYMENT_NOT_FOUND`** (e.g. on `nova-nine-rust.vercel.app`), the domain exists but **no successful deployment** is attached:
+
+1. Vercel → your project → **Deployments**
+2. Open the latest deployment — if it shows **Error**, click it and read the **Build Logs**
+3. Click **Redeploy** on the latest **`main`** commit (after pulling the newest fixes)
+
+Required **Project Settings → General → Build & Development**:
+
+| Setting | Value |
+|---------|--------|
+| Framework Preset | **Other** (or leave auto) |
+| Build Command | `npm run vercel-build` |
+| Install Command | `npm install` |
+| Output Directory | **leave empty** (do not set `public`) |
+| Node.js Version | **22.x** |
 
 ---
 

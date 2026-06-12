@@ -10,7 +10,7 @@
     "client:dev": "npm run dev --prefix client",
     "client:build": "npm run build --prefix client",
     "build": "node scripts/verify.js",
-    "vercel-build": "npm run build",
+    "vercel-build": "node scripts/verify.js --vercel",
     "verify": "node scripts/verify.js",
     "db:migrate": "node scripts/apply-supabase-sql.js",
     "build:all": "npm run client:build",
