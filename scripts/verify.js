@@ -22,6 +22,7 @@ const requiredPublic = [
   "css/styles.css",
   "css/admin.css",
   "js/app.js",
+  "js/motion-ui.js",
   "js/auth.js",
   "js/admin.js",
   "assets/favicon.svg",

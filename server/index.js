@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const rateLimit = require("express-rate-limit");
+const fs = require("fs");
 const path = require("path");
 
 const db = require("./db");
@@ -195,7 +196,17 @@ app.post("/api/auth/oauth-exchange", (_req, res) => {
 });
 
 if (!process.env.VERCEL) {
-  app.use(express.static(path.join(__dirname, "..", "public")));
+  const clientDist = path.join(__dirname, "..", "client", "dist");
+  const publicDir = path.join(__dirname, "..", "public");
+  const staticRoot = fs.existsSync(path.join(clientDist, "index.html")) ? clientDist : publicDir;
+  app.use(express.static(staticRoot));
+  app.use(express.static(publicDir));
+  if (staticRoot === clientDist) {
+    app.get("*", (req, res, next) => {
+      if (req.path.startsWith("/api") || req.path.endsWith(".html")) return next();
+      res.sendFile(path.join(clientDist, "index.html"));
+    });
+  }
 }
 
 app.use((_req, res) => {
