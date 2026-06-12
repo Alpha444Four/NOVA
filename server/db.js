@@ -559,10 +559,27 @@ function getMode() {
   return dbMode;
 }
 
+function getDiagnostics() {
+  const url = getDatabaseUrl();
+  const hasUrl = hasValidDatabaseUrl();
+  return {
+    mode: dbMode,
+    postgresConfigured: hasUrl,
+    useSupabaseFlag: process.env.USE_SUPABASE_DB || null,
+    hasDatabaseUrl: Boolean(process.env.DATABASE_URL),
+    hasPostgresUrl: Boolean(process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING),
+    hint:
+      dbMode === "memory"
+        ? "Link Supabase on Vercel (Storage/Integrations) or set DATABASE_URL / POSTGRES_URL"
+        : null,
+  };
+}
+
 module.exports = {
   initDb,
   ready: () => dbReady,
   getMode,
+  getDiagnostics,
   usePg,
   getProducts,
   findUserByEmail,

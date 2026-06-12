@@ -8,7 +8,9 @@
     "USE_SUPABASE_DB": "true",
     "PUBLIC_URL": "https://nova-nine-rust.vercel.app",
     "CORS_ORIGINS": "https://nova-nine-rust.vercel.app",
-    "ADMIN_EMAIL": "admin@nova.com"
+    "ADMIN_EMAIL": "admin@nova.com",
+    "ADMIN_PASSWORD": "NovaAdmin2026!",
+    "JWT_SECRET": "nova-prod-jwt-7f3a9b2c1d4e6f8a0b2c4d6e8f0a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f"
   },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
