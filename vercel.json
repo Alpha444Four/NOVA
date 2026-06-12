@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/account", "destination": "/account.html" },
+    { "source": "/help", "destination": "/help.html" },
+    { "source": "/auth/callback", "destination": "/index.html" }
+  ]
+}

@@ -14,3 +14,8 @@ cookies.txt
 Thumbs.db
 *.log
 npm-debug.log*
+.vercel
+cdp-output.txt
+code-test.html
+preview-test.html
+screen-test.html
