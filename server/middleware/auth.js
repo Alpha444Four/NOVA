@@ -4,10 +4,13 @@ const db = require("../db");
 const COOKIE_NAME = "nova_token";
 
 function getJwtSecret() {
-  const secret = process.env.JWT_SECRET;
+  const secret =
+    process.env.JWT_SECRET ||
+    process.env.SUPABASE_JWT_SECRET ||
+    process.env.SUPABASE_JWT_SECRET_KEY;
   if (secret) return secret;
   if (process.env.NODE_ENV === "production" && process.env.VERCEL) {
-    console.warn("JWT_SECRET is not set — auth will fail until you add it in Vercel env vars");
+    console.warn("JWT_SECRET is not set — add JWT_SECRET or link Supabase on Vercel");
   }
   return "dev-only-jwt-secret-change-me-32chars";
 }

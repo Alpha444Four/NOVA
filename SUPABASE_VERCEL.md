@@ -2,7 +2,27 @@
 
 On Vercel, the API runs in **serverless functions**. Without a database, data lives in **memory** and resets on cold starts. This guide connects **Supabase Postgres** so signups, logins, orders, and newsletter subscribers persist.
 
-Live app example: `https://nova-nine-rust.vercel.app`
+Live app: **https://nova-nine-rust.vercel.app** (Vercel project: `imad8/nova`)
+
+---
+
+## Fastest path — Vercel Marketplace (recommended)
+
+1. Open **[vercel.com/imad8/nova](https://vercel.com/imad8/nova)** → **Storage** or **Integrations**.
+2. Add **[Supabase](https://vercel.com/marketplace/supabase)** → create or link a project.
+3. Vercel auto-injects `POSTGRES_URL`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_JWT_SECRET`, etc.
+4. **Redeploy** production.
+
+NOVA auto-detects `POSTGRES_URL`, runs the schema on first boot, and seeds admin + products. No manual SQL required.
+
+Set these in Vercel if not already present:
+
+| Variable | Value |
+|----------|-------|
+| `ADMIN_PASSWORD` | your admin password |
+| `JWT_SECRET` | optional — uses `SUPABASE_JWT_SECRET` when linked |
+
+Verify: `curl https://nova-nine-rust.vercel.app/api/health` → `"database": "postgres"`.
 
 ---
 

@@ -3,6 +3,13 @@
   "version": 2,
   "installCommand": "npm install",
   "buildCommand": "npm run vercel-build",
+  "env": {
+    "NODE_ENV": "production",
+    "USE_SUPABASE_DB": "true",
+    "PUBLIC_URL": "https://nova-nine-rust.vercel.app",
+    "CORS_ORIGINS": "https://nova-nine-rust.vercel.app",
+    "ADMIN_EMAIL": "admin@nova.com"
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/login", "destination": "/login.html" },

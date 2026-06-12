@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = require("path");
 const bcrypt = require("bcryptjs");
 
 const PRODUCTS = [
@@ -44,10 +46,40 @@ let pgPool = null;
 let dbMode = "memory";
 let dbReady = Promise.resolve();
 
+function getDatabaseUrl() {
+  return (
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    ""
+  );
+}
+
 function hasValidDatabaseUrl() {
-  const url = process.env.DATABASE_URL || "";
+  const url = getDatabaseUrl();
   if (!url || url.includes("[YOUR-PASSWORD]") || url.includes("://postgres:@")) return false;
   return /^postgres(ql)?:\/\//i.test(url);
+}
+
+function shouldUsePostgres() {
+  if (process.env.USE_SUPABASE_DB === "false") return false;
+  if (process.env.USE_SUPABASE_DB === "true") return hasValidDatabaseUrl();
+  // Vercel ↔ Supabase integration injects POSTGRES_URL without USE_SUPABASE_DB
+  if (process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING) return hasValidDatabaseUrl();
+  return false;
+}
+
+async function ensureSchema() {
+  const migrationPath = path.join(
+    __dirname,
+    "..",
+    "supabase",
+    "migrations",
+    "20260328000000_nova_schema.sql"
+  );
+  if (!fs.existsSync(migrationPath)) return;
+  const sql = fs.readFileSync(migrationPath, "utf8");
+  await pgPool.query(sql);
 }
 
 function usePg() {
@@ -105,15 +137,16 @@ async function seedPostgres() {
 }
 
 async function initDb() {
-  if (process.env.USE_SUPABASE_DB === "true" && hasValidDatabaseUrl()) {
+  if (shouldUsePostgres()) {
     try {
       const { Pool } = require("pg");
       pgPool = new Pool({
-        connectionString: process.env.DATABASE_URL,
+        connectionString: getDatabaseUrl(),
         ssl: { rejectUnauthorized: false },
         max: 3,
       });
       await pgPool.query("SELECT 1");
+      await ensureSchema();
       await seedPostgres();
       dbMode = "postgres";
       console.log("Database: Supabase Postgres");
@@ -124,7 +157,9 @@ async function initDb() {
     }
   }
   dbMode = "memory";
-  console.log("Database: in-memory (set USE_SUPABASE_DB=true + DATABASE_URL for Postgres)");
+  console.log(
+    "Database: in-memory (link Supabase on Vercel or set USE_SUPABASE_DB=true + DATABASE_URL)"
+  );
   return dbMode;
 }
 
